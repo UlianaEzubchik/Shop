@@ -1,0 +1,710 @@
+﻿@page
+@model Shop.UI.Pages.Admin.IndexModel
+@{
+    ViewData["Title"] = "Менеджмент товаров";
+}
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Список товаров</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="/Admin/AdminMain">Главная</a></li>
+                    <li class="breadcrumb-item active">Список товаров</li>
+                </ol>
+            </div>
+        </div>
+    </div><!-- /.container-fluid -->
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid" id="app">
+        <div v-if="!editing">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            Весь ассортимент магазина. Нажмите на строку, чтобы отредактировать соответствующий товар.
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body">
+                            <button class="btn btn-info" @@click="newProduct" style="color: #000; background-color: #c39ed4; border-color: #c39ed4;">Добавить товар</button>
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="align">ID</th>
+                                        <th class="align">Статус</th>
+                                        <th class="align">Изображение</th>
+                                        <th class="align">Название</th>
+                                        <th class="align">Цена (р.)</th>
+                                        <th class="align">Кол-во</th>
+                                        <th class="align">Отметки</th>
+                                        <th class="align">Дата создания</th>
+                                        <th class="align">СР</th>
+                                        <th class="align"><i class="fa fa-times"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(product, index) in products">
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="align">{{product.id}}</td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">
+                                            <label v-if="product.isActive===true" style="color: #904fa4">Активен</label>
+                                            <label v-else style="color:red">Неактивен</label>
+                                        </td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="product-col align">
+                                            <div class="product">
+                                                <div class="image">
+                                                    <a asp-page="/Product">
+                                                        <img :src="'/images/productsfolder/' + product.image" width="85" height="115" />
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">{{product.description}}-{{product.name}}</td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">{{product.value}}</td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">{{product.stockc}}</td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">
+                                            <label v-if="product.isNew===true">Новинка</label>
+                                            <label v-else></label>
+                                            <label v-if="product.isTrending===true">Популярный</label>
+                                            <label v-else></label>
+                                            <label v-if="product.isTrending===false && product.isNew===false">Нет отметок</label>
+                                        </td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">
+                                            {{product.dateTime}}
+                                        </td>
+                                        <td @@click="editProduct(product.id, index); selectProduct(product)" class="price-col align">
+                                            <label v-if="!product.avRating">Нет</label>
+                                            <label v-else>{{product.avRating}}</label>
+                                        </td>
+                                        <td class="align"><i class="fa fa-times" @@click="deleteProduct(product.id, index)"></i></td>
+                                    </tr>
+                                </tbody>
+                               
+                            </table>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                </div>
+                <!-- /.col -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <div v-else>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-primary" style="max-height: 580px">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Общая информация о товаре </h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form enctype="multipart/form-data">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Название</label>
+                                    <input type="text" class="form-control" v-model="productModel.name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Производитель</label> 
+                                    <input list="description" class="form-control" v-model="productModel.description">
+                                    <datalist id="description">
+                                        <option value="Apple"></option>
+                                        <option value="Xiaomi"></option>
+                                        <option value="Samsung"></option>
+                                        <option value="POCO"></option>
+                                        <option value="Huawei"></option>
+                                        <option value="HONOR"></option>
+                                        <option value="Realme"></option>
+                                        <option value="Nokia"></option>
+                                        <option value="OnePlus"></option>
+                                        <option value="Vivo"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Базовая цена</label>
+                                    <input type="number" step="0.01" class="form-control" v-model.number="productModel.value">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Изображение</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="image" id="image" @@change="onFileChange">>
+                                            <label class="custom-file-label" for="exampleInputFile">Выберите файл</label>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="customCheckbox1" value="option1" v-model="productModel.isNew">
+                                    <label for="customCheckbox1" class="custom-control-label">Новинка</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="customCheckbox3" value="option3" v-model="productModel.isTrending">
+                                    <label for="customCheckbox3" class="custom-control-label">Популярный</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="customCheckbox4" value="option4" v-model="productModel.isActive">
+                                    <label for="customCheckbox4" class="custom-control-label">На продаже</label>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-primary" v-if="!productModel.id" style="max-height: 502px; height:580px">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Характеристики</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form class=" prokrutka">
+                            <div class="card-body">
+                                <div class="form-group" id="box1">
+                                    <label for="exampleInputEmail1">Операционная система</label>
+                                    <input list="operatingSystem" class="form-control" v-model="newSpecification.operatingSystem">
+                                    <datalist id="operatingSystem">
+                                        <option value="Android"></option>
+                                        <option value="iOS"></option>
+                                        <option value="Windows"></option>
+                                        <option value="Symbian"></option>
+                                        <option value="Bada"></option>
+                                        <option value="Nokia"></option>
+                                        <option value="KaiOS"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box2">
+                                    <label for="exampleInputPassword1">Дисплей</label>
+                                    <input list="screenDiagonal" class="form-control" v-model="newSpecification.screenDiagonal">
+                                    <datalist id="screenDiagonal">
+                                        <option value="6"></option>
+                                        <option value="6.1"></option>
+                                        <option value="6.2"></option>
+                                        <option value="6.3"></option>
+                                        <option value="6.4"></option>
+                                        <option value="6.5"></option>
+                                        <option value="6.6"></option>
+                                        <option value="6.7"></option>
+                                        <option value="6.8"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box3">
+                                    <label for="exampleInputPassword1">Оперативная память</label>
+                                    <input list="ram" class="form-control" v-model="newSpecification.ram">
+                                    <datalist id="ram">
+                                        <option value="2"></option>
+                                        <option value="4"></option>
+                                        <option value="6"></option>
+                                        <option value="8"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box4">
+                                    <label for="exampleInputPassword1">Встроенная память</label>
+                                    <input list="persistentMemory" class="form-control" v-model="newSpecification.persistentMemory">
+                                    <datalist id="persistentMemory">
+                                        <option value="32"></option>
+                                        <option value="64"></option>
+                                        <option value="128"></option>
+                                        <option value="256"></option>
+                                        <option value="512"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box5">
+                                    <label for="exampleInputPassword1">Количество SIM-карт</label>
+                                    <input list="qtySIM" class="form-control" v-model="newSpecification.qtySim">
+                                    <datalist id="qtySIM">
+                                        <option value="1"></option>
+                                        <option value="2"></option>
+                                        <option value="3"></option>
+                                        <option value="4"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box6">
+                                    <label for="exampleInputPassword1">Основная камера</label>
+                                    <input list="mainCamera" class="form-control" v-model="newSpecification.mainCamera">
+                                    <datalist id="mainCamera">
+                                        <option value="8"></option>
+                                        <option value="12"></option>
+                                        <option value="16"></option>
+                                        <option value="24"></option>
+                                        <option value="32"></option>
+                                        <option value="64"></option>
+                                        <option value="108"></option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box7">
+                                    <label for="exampleInputPassword1">Фронтальная камера</label>
+                                    <input list="frontCamera" class="form-control" v-model="newSpecification.frontCamera">
+                                    <datalist id="frontCamera">
+                                        <option value="8"></option>
+                                        <option value="12"></option>
+                                        <option value="16"></option>
+                                        <option value="24"></option>
+                                        <option value="32"></option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                    <div class="card card-primary" v-else style="max-height: 502px; height:580px">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Характеристики</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form class=" prokrutka">
+                            <div class="card-body" v-for="(specification, index) in selectedProduct.specification">
+                                <div class="form-group" id="box1">
+                                    <label for="exampleInputEmail1">Операционная система</label>
+                                    <input list="operatingSystem" class="form-control" v-model="specification.operatingSystem">
+                                    <datalist id="operatingSystem">
+                                        <option value="Android">Android</option>
+                                        <option value="AppleIOS">Apple iOS</option>
+                                        <option value="Windows">Windows Phone</option>
+                                        <option value="Symbian">Symbian</option>
+                                        <option value="Bada">Bada</option>
+                                        <option value="Nokia">Nokia Series 30+</option>
+                                        <option value="KaiOS">KaiOS</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box2">
+                                    <label for="exampleInputPassword1">Диагональ экрана</label>
+                                    <input list="screenDiagonal" class="form-control" v-model="specification.screenDiagonal">
+                                    <datalist id="screenDiagonal">
+                                        <option value="6">6 дюймов</option>
+                                        <option value="6.1">6.1 дюйм</option>
+                                        <option value="6.2">6.2 дюйма</option>
+                                        <option value="6.3">6.3 дюйма</option>
+                                        <option value="6.4">6.4 дюйма</option>
+                                        <option value="6.5">6.5 дюймов</option>
+                                        <option value="6.6">6.6 дюймов</option>
+                                        <option value="6.7">6.7 дюймов</option>
+                                        <option value="6.8">6.8 дюймов</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box3">
+                                    <label for="exampleInputPassword1">Оперативная память</label>
+                                    <input list="ram" class="form-control" v-model="specification.ram">
+                                    <datalist id="ram">
+                                        <option value="2">2</option>
+                                        <option value="4">4</option>
+                                        <option value="6">6</option>
+                                        <option value="8">8</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box4">
+                                    <label for="exampleInputPassword1">Встроенная память</label>
+                                    <input list="persistentMemory" class="form-control" v-model="specification.persistentMemory">
+                                    <datalist id="persistentMemory">
+                                        <option value="32">32</option>
+                                        <option value="64">64</option>
+                                        <option value="128">128</option>
+                                        <option value="256">256</option>
+                                        <option value="512">512</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box5">
+                                    <label for="exampleInputPassword1">Количество SIM-карт</label>
+                                    <input list="qtySIM" class="form-control" v-model="specification.qtySim">
+                                    <datalist id="qtySIM">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box6">
+                                    <label for="exampleInputPassword1">Основная камера</label>
+                                    <input list="mainCamera" class="form-control" v-model="specification.mainCamera">
+                                    <datalist id="mainCamera">
+                                        <option value="8">8</option>
+                                        <option value="12">12</option>
+                                        <option value="16">16</option>
+                                        <option value="24">24</option>
+                                        <option value="32">32</option>
+                                        <option value="64">64</option>
+                                        <option value="108">108</option>
+                                    </datalist>
+                                </div>
+                                <div class="form-group" id="box7">
+                                    <label for="exampleInputPassword1">Фронтальная камера</label>
+                                    <input list="frontCamera" class="form-control" v-model="specification.frontCamera">
+                                    <datalist id="frontCamera">
+                                        <option value="8">8</option>
+                                        <option value="12">12</option>
+                                        <option value="16">16</option>
+                                        <option value="24">24</option>
+                                        <option value="32">32</option>
+                                    </datalist>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-info" v-if="selectedProduct" style="min-height: 564px;">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Вариации</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form class="prokrutka" enctype="multipart/form-data" style="max-height: 605px; height: 604px;">
+                            <div class="card-body" v-if="selectedProduct">
+                                <table id="example1" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="align">Id</th>
+                                            <th class="align"><i class="fa fa-shopping-cart"></i></th>
+                                            <th class="align">Наименование</th>
+                                            <th class="align">BYN</th>
+                                            <th class="align"><i class="fa fa-percent"></i></th>
+                                            <th class="align"><i class="fa fa-archive"></i></th>
+                                            <th class="align">Фото</th>
+                                            <th><i class="fa fa-times"></i></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr v-for="(stock, index) in selectedProduct.stock">
+                                            <td>{{stock.id}}</td>
+                                            <td class="align" style="max-width: 20px;"><input class="input" type="checkbox" id="customCheckbox5" value="option5" v-model="stock.isActive" style="max-width: 40px;" /></td>
+                                            <td class="align"><input class="input customInput" v-model="stock.description" /><i class="fas fa-square" name="colorIndicator"></i></td>
+                                            <td class="align"><input class="input customInput" v-model.number="stock.value" style="max-width: 50px;" /></td>
+                                            <td class="align"><input class="input customInput" v-model.number="stock.isOnSale" style="max-width: 40px;" /></td>
+                                            <td class="align"><input class="input customInput" v-model.number="stock.qty" style="max-width: 40px;" /></td>
+                                            <td class="align">
+                                                <figure class="product-media">
+                                                    <img :src="'/images/productsfolder/' + stock.propImage" class="img-circle elevation-2" width="50" height="50" />
+                                                </figure>
+                                            </td>
+                                            <td class="align"><i class="fa fa-times" @@click="deleteStock(stock.id, index)"></i></td>
+                                        </tr>
+                                    </tbody>
+                                    @*<tfoot>
+                                        <tr>
+                                            <th class="align">Id</th>
+                                            <th class="align"><i class="fa fa-shopping-cart"></i></th>
+                                            <th class="align">Наименование</th>
+                                            <th class="align">BYN</th>
+                                            <th class="align"><i class="fa fa-percent"></i></th>
+                                            <th class="align"><i class="fa fa-archive"></i></th>
+                                            <th class="align">Фото</th>
+                                            <th><i class="fa fa-times"></i></th>
+                                        </tr>
+                                    </tfoot>*@
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-info" v-if="selectedProduct" style="max-height: 650px;">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Добавить вариацию товара</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form enctype="multipart/form-data">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1">Название</label>
+                                    <input type="text" class="form-control" v-model="newStock.description">
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Color picker with addon:</label>
+
+                                    <div class="input-group color1">
+                                        <input type="text" class="form-control" id="colorPicker">
+
+                                        <div class="input-group-append">
+                                            <span class="input-group-text"><i class="fas fa-square"></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Количество на складе</label>
+                                    <input type="text" class="form-control" v-model.number="newStock.qty">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Цена</label>
+                                    <input type="text" id="value" class="form-control" v-model.number="newStock.value" @@change="saleCost">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Изображение</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" name="image" id="image" @@change="onFileChangeStock">
+                                            <label class="custom-file-label" for="exampleInputFile">Выберите файл</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox">
+                                        <input class="custom-control-input" type="checkbox" id="customCheckbox2" @@click="saleChecked(); saleCost()" value="option2">
+                                        <label for="customCheckbox2" class="custom-control-label" >На скидке</label>
+                                        <input type="number" min="0" max="100" id="SaleInput" class="customInput hidden" v-model.number="newStock.isOnSale" @@change="saleCost" style="max-width: 60px">
+                                        <label for="SaleInput">%</label>
+                                        <label class="hidden" id="SaleText" style="float: right"></label>
+                                    </div>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="customCheckbox6" value="option6" v-model="newStock.isActive">
+                                    <label for="customCheckbox6" class="custom-control-label">На продаже</label>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a class="btn btn-info" @@click="addStock" style="background: #e83e8c;">Добавить</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card card-success" v-if="selectedProduct">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Комментарии</h3>
+                            <h3 class="card-title" style="float:right" id="reviewRate"><i class="fa fa-star"></i> {{selectedProduct.avRating}}</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form style="overflow-y: scroll; height: 538px">
+                            <div class="card-body" v-for="(review, index) in selectedProduct.review">
+                                <div class="card card-outline">
+                                    <div class="card-header">
+                                        <h5 class="card-title">{{review.commentatorName}}</h5>
+                                        <div class="card-tools">
+                                            <a class="btn btn-tool btn-link"><i class="fa fa-star"></i>{{review.rating}}</a>
+                                            <a class="btn btn-tool " @@click="deleteReview(review.id, index)">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <label for="exampleInputPassword1">{{review.title}}</label>
+                                        <p>
+                                            {{review.comments}}
+                                        </p>
+                                    </div>
+                                    <div class="card-footer">
+                                        {{review.thisDateTime}}
+                                        <h6 style="float:right">{{review.email}}</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+                        </form>
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <div class="card card-success" v-if="selectedProduct">
+                        <div class="card-header" style="background: #e83e8c;">
+                            <h3 class="card-title">Добавить комментарий</h3>
+                        </div>
+                        <!-- /.card-header -->
+                        <!-- form start -->
+                        <form>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Имя</label>
+                                    <input type="text" class="form-control" v-model="newReview.commentatorName" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Email</label>
+                                    <input type="email" class="form-control" v-model="newReview.email" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Заголовок</label>
+                                    <input type="text" class="form-control" v-model="newReview.title" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Текст</label>
+                                    <input type="text" class="form-control" v-model="newReview.comments" />
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <!-- Change starability-basic to different class to see animations. -->
+                                        <label for="exampleInputPassword1">Оценка:</label>
+                                        <fieldset class="starability-basic">
+                                            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+
+                                            <input type="radio" id="rate1" name="rating" value="1" @@click="newReview.rating = 1" />
+                                            <label for="rate1">1.</label>
+
+                                            <input type="radio" id="rate2" name="rating" value="2" @@click="newReview.rating = 2" />
+                                            <label for="rate2">2</label>
+
+                                            <input type="radio" id="rate3" name="rating" value="3" @@click="newReview.rating = 3" />
+                                            <label for="rate3">3</label>
+
+                                            <input type="radio" id="rate4" name="rating" value="4" @@click="newReview.rating = 4" />
+                                            <label for="rate4">4</label>
+
+                                            <input type="radio" id="rate5" name="rating" value="5" @@click="newReview.rating = 5" />
+                                            <label for="rate5">5</label>
+
+                                            <span class="starability-focus-ring"></span>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.card-body -->
+
+                            <div class="card-footer">
+                                <a class="btn btn-success" @@click="addReview" style="background: #e83e8c;">Добавить</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row hidden" id="descr">
+            <div class="col-md-12">
+                <div class="card card-info">
+                    <div class="card-header"  style="background: #e83e8c;">
+                        <h3 class="card-title">
+                            Описание
+                        </h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div id="editor" v-model="productModel.fullDescription" style="min-height: 500px; overflow: hidden;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="customSticky" v-if="editing">
+            <div class="rectangle">
+                <a class="btn btn-success" @@click="createProduct()" v-if="!productModel.id" style="margin-left: 15px; margin-top: 8px">Создать</a>
+                <a class="btn btn-success" @@click="updateProduct" v-else style="margin-left: 15px; margin-top: 8px">Применить</a>
+                <a class="btn btn-danger float-right" href="/Admin" @@click="cancel()" style="margin-right: 15px; margin-top: 8px">Вернуться</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+@section scripts
+{
+    <script src="~/js/admin/products.js"></script>
+    <script src="/plugins/datatables/jquery.dataTables.min.js"></script>
+    <script src="/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+    <script src="/plugins/jszip/jszip.min.js"></script>
+    <script src="/plugins/pdfmake/pdfmake.min.js"></script>
+    <script src="/plugins/pdfmake/vfs_fonts.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.print.min.js"></script>
+    <script src="/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+    <script src="/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="/plugins/bootstrap-colorpicker/js/bootstrap-colorpicker.min.js"></script>
+    <script>
+        window.onload = function () {
+            $(function () {
+                $("#example1").on("draw.dt", function () {
+                    $(this).find(".dataTables_empty").parents('tbody').empty();
+                }).DataTable({
+                    filter: true,
+                    paging: false,
+                    lengthChange: false,
+                    searching: false,
+                    ordering: true,
+                    info: false,
+                    autoWidth: false,
+                    responsive: false,
+                    stripe: true,
+                    scrollY: '50vh',
+                    scrollCollapse: true,
+                    dom: '<"top"flp>rt<"bottom"i><"clear">',
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.11.4/i18n/ru.json',
+
+                    }
+                });
+                $("#example2").on("draw.dt", function () {
+                    $(this).find(".dataTables_empty").parents('tbody').empty();
+                }).DataTable({
+                    filter: true,
+                    paging: false,
+                    lengthChange: false,
+                    searching: true,
+                    ordering: true,
+                    info: false,
+                    autoWidth: false,
+                    responsive: true,
+                    statesave: true,
+                    dom: '<"top"flp>rt<"bottom"i><"clear">',
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.11.4/i18n/ru.json',
+
+                    },
+                    stripe: true,
+                });
+            });
+        }
+    </script>
+    <script>
+
+        $(function () {
+            bsCustomFileInput.init();
+        });
+    </script>
+   
+    <script>
+        function saleChecked() {
+            if (document.getElementById("customCheckbox2").checked == true) {
+                document.getElementById("SaleInput").classList.remove("hidden");
+                document.getElementById("SaleText").classList.remove("hidden");
+            }
+            else {
+                document.getElementById("SaleInput").value = 0;
+                document.getElementById("SaleInput").classList.add("hidden");
+                document.getElementById("SaleText").classList.add("hidden");
+            }
+        }
+        function saleCost() {
+            document.getElementById("SaleText").innerHTML = "Цена со скидкой: " + ((document.getElementById("value").value - (document.getElementById("SaleInput").value / 100 * document.getElementById("value").value)).toFixed(2));
+        }
+    </script>
+    <script>
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+    </script>
+
+
+}

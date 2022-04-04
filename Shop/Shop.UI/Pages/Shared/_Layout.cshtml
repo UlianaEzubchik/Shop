@@ -1,0 +1,317 @@
+﻿<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
+    <title>@ViewData["Title"] - Магазин телефонов</title>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/images/icons/site.html">
+    <link rel="mask-icon" href="/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.core.css">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="~/css/StarRate/starability-all.min.css" />
+</head>
+
+<style>
+
+    .ql-toolbar.ql-snow {
+        border: none !important;
+    }
+    /* width */
+    .scroll::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    /* Track */
+    .scroll::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-right: 4px solid white;
+    }
+
+    /* Handle */
+    .scroll::-webkit-scrollbar-thumb {
+        background: #888;
+        border-right: 4px solid white;
+    }
+
+        /* Handle on hover */
+        .scroll::-webkit-scrollbar-thumb:hover {
+            background: #555;
+            border-right: 4px solid white;
+        }
+
+    .prokrutka {
+        overflow: hidden;
+        max-height: 610px;
+        height: 610px;
+        direction: rtl;
+        border-left: 6px solid white;
+    }
+
+        .prokrutka:hover {
+            overflow-y: scroll;
+            border-left: none;
+        }
+</style>
+
+<body>
+    <div class="page-wrapper">
+        <header class="header">
+            <div class="header-middle sticky-header">
+                <div class="container">
+                    <div class="header-left">
+                        <button class="mobile-menu-toggler">
+                            <span class="sr-only">Toggle mobile menu</span>
+                            <i class="icon-bars"></i>
+                        </button>
+
+                        <a href="index.html" class="logo">
+                            @*<img src="assets/images/logo.png" alt="Molla Logo" width="105" height="25">*@
+                        </a>
+
+                        <nav class="main-nav">
+                            <ul class="menu sf-arrows">
+                                <li >
+                                    <a asp-page="Index" >Главная</a>
+                                </li>
+                                <li>
+                                    <a asp-page="AllProducts">Ассортимент</a>
+                                </li>
+                                <li>
+                                    <a asp-page="Contact">Контакты</a>
+                                </li>
+
+                                <li>
+                                    <a asp-page="About">О нас</a>
+                                </li>
+                            </ul><!-- End .menu -->
+                        </nav><!-- End .main-nav -->
+                    </div><!-- End .header-left -->
+
+                    <div class="header-right">
+                        <!--<div class="header-search">
+                            <a href="#" class="search-toggle" role="button" title="Search"><i class="icon-search"></i></a>
+                            <form action="#" method="get">
+                                <div class="header-search-wrapper">
+                                    <label for="q" class="sr-only">Search</label>
+                                    <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
+                                </div>--><!-- End .header-search-wrapper -->
+                            <!--</form>
+                        </div>--><!-- End .header-search -->
+
+
+                        <a asp-page="Wishlist" class="wishlist-link">
+                            <i class="icon-heart-o"></i>
+                                <vc:cart view="SmallWish"></vc:cart>
+                            @*<span class="wishlist-count">3</span>*@
+                        </a>
+
+
+
+                        <vc:cart view="Medium"></vc:cart>
+
+
+                    </div><!-- End .header-right -->
+                </div><!-- End .container -->
+            </div><!-- End .header-middle -->
+        </header><!-- End .header -->
+
+        <partial name="_CookieConsentPartial" />
+
+
+        @RenderBody()
+
+
+        <footer class="footer">
+            <div class="footer-bottom">
+                <div class="container">
+                    <p class="footer-copyright">Copyright © 2022 Интернет-магазин телефонов. Все права сохранены.</p><!-- End .footer-copyright -->
+                    <ul class="footer-menu">
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li><a asp-page="/Admin/Index">Менеджмент</a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-page="/Admin/Index">Войти</a></li>
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li><a asp-controller="Account" asp-action="Logout">Выйти</a></li>
+                        }
+
+                    </ul><!-- End .footer-menu -->
+                    <figure class="footer-payments">
+                        <img src="/images/payments.png" alt="Payment methods" width="272" height="20">
+                    </figure><!-- End .footer-payments -->
+
+                </div><!-- End .container -->
+            </div><!-- End .footer-bottom -->
+        </footer><!-- End .footer -->
+    </div><!-- End .page-wrapper -->
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
+
+    <div class="mobile-menu-container">
+        <div class="mobile-menu-wrapper">
+            <span class="mobile-menu-close"><i class="icon-close"></i></span>
+
+            <form action="#" method="get" class="mobile-search">
+                <label for="mobile-search" class="sr-only">Search</label>
+                <input type="search" class="form-control" name="mobile-search" id="mobile-search" placeholder="Search in..." required>
+                <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+            </form>
+
+            <nav class="mobile-nav">
+                <ul class="mobile-menu">
+                    <li class="active">
+                        <a href="index.html">Home</a>
+
+                        <ul>
+                           
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="category.html">Shop</a>
+                        <ul>
+                          
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="product.html" class="sf-with-ul">Product</a>
+                        <ul>
+                         
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Pages</a>
+                        <ul>
+                            <li>
+                                <a href="about.html">About</a>
+
+                                <ul>
+                                    <li><a href="about.html">About 01</a></li>
+                                    <li><a href="about-2.html">About 02</a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="contact.html">Contact</a>
+
+                             
+                          
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="blog.html">Blog</a>
+
+                        <ul>
+                            <li><a href="blog.html">Classic</a></li>
+                            <li><a href="blog-listing.html">Listing</a></li>
+                            <li>
+                                <a href="#">Grid</a>
+                                <ul>
+                                  
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Masonry</a>
+                                <ul>
+                              
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Mask</a>
+                                <ul>
+                                  
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#">Single Post</a>
+                                <ul>
+                                   
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="elements-list.html">Elements</a>
+                        <ul>
+                           
+                        </ul>
+                    </li>
+                </ul>
+            </nav><!-- End .mobile-nav -->
+
+            <div class="social-icons">
+                <a href="#" class="social-icon" target="_blank" title="Facebook"><i class="icon-facebook-f"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Twitter"><i class="icon-twitter"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Instagram"><i class="icon-instagram"></i></a>
+                <a href="#" class="social-icon" target="_blank" title="Youtube"><i class="icon-youtube"></i></a>
+            </div><!-- End .social-icons -->
+        </div><!-- End .mobile-menu-wrapper -->
+    </div><!-- End .mobile-menu-container -->
+    <!-- Sign in / Register Modal -->
+    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+
+                    <div class="form-box">
+                        <div class="form-tab">
+                            <ul class="nav nav-pills nav-fill" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
+                                </li>
+                            </ul>
+                        </div><!-- End .form-tab -->
+                    </div><!-- End .form-box -->
+                </div><!-- End .modal-body -->
+            </div><!-- End .modal-content -->
+        </div><!-- End .modal-dialog -->
+    </div><!-- End .modal -->
+    <!-- Plugins JS File -->
+    <script src="/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/jquery.hoverIntent.min.js"></script>
+    <script src="/js/jquery.waypoints.min.js"></script>
+    <script src="/js/superfish.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/bootstrap-input-spinner.js"></script>
+    <script src="/js/jquery.plugin.min.js"></script>
+    <script src="/js/jquery.magnific-popup.min.js"></script>
+    <script src="/js/jquery.countdown.min.js"></script>
+    <script src="/plugins/toastr/toastr.min.js"></script>
+    <script src="/js/main.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
