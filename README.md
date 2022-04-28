@@ -31,13 +31,14 @@
 <br>
 Панель администратора
 ![admin](https://user-images.githubusercontent.com/88460922/165747176-03068ff2-0898-474b-a51f-121895c8937d.png)
+![adaptiv](https://user-images.githubusercontent.com/88460922/165748709-41c48da7-b85d-4e57-93e3-7152ffdbe4b7.png)
 
 <br>
 Корзина
 ![card](https://user-images.githubusercontent.com/88460922/165747444-755f839f-dfd5-41ac-8afb-dc52df669f7f.png)
 
 ## Преимущества
-
+![spec](https://user-images.githubusercontent.com/88460922/165740252-059c7b6d-879e-4d4b-89ce-5396c309a3f9.png)
 
 ## Адаптивность
 ![adaptiv](https://user-images.githubusercontent.com/88460922/165740275-af65da12-4bf2-4915-b7e4-09fd9c42b434.png)
