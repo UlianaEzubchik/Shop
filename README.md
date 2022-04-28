@@ -1,7 +1,6 @@
 # Shop
 [![LinkedIn][linkedin-shield]][linkedin-url]
 <h1 align="center">
-  <br>
   Интернет-магазин мобильных телефонов
   <br>
 </h1>
@@ -28,7 +27,9 @@
   * добавление товаров в "Избранные" и "Корзину";
   * наличие оплаты через сервис Stripe;
   * наличие таких дополнительных страничек, как «Контакты», «О нас».
-
+<br>
+Панель администратора
+![admin](https://user-images.githubusercontent.com/88460922/165747028-db33fe63-7ce0-4fc4-bf3b-9b14e307f9ac.png)
 
 ## Преимущества
 ![spec](https://user-images.githubusercontent.com/88460922/165740252-059c7b6d-879e-4d4b-89ce-5396c309a3f9.png)
