@@ -9,6 +9,7 @@
   <a href="#О проекте">О проекте</a> •
   <a href="#specifications">Характеристики</a> •
   <a href="#adaptiv">Адаптивность</a> •
+  <a href="#sredstva">Средства разработки</a> 
 </p>
 
 ## О проекте
@@ -40,6 +41,14 @@
 
 ## Адаптивность
 ![adaptiv](https://user-images.githubusercontent.com/88460922/165740275-af65da12-4bf2-4915-b7e4-09fd9c42b434.png)
+
+## Средства разработки
+Проект создан с помощью следующих инструментов:
+* [Vue.js](https://vuejs.org/)
+* [Bootstrap](https://getbootstrap.com)
+* [JQuery](https://jquery.com)
+
+<p align="right"><a href="#top">В начало</a></p>
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
