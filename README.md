@@ -6,11 +6,10 @@
   <br>
 </h1>
 
-<h4 align="center">A minimal Markdown Editor desktop app built on top of <a href="http://electron.atom.io" target="_blank">Electron</a>.</h4>
-
 <p align="center">
-  <a href="#key-features">Характеристики</a> •
-  <a href="#how-to-use">Адаптивность</a> •
+  <a href="#about">О проекте</a> •
+  <a href="#specifications">Характеристики</a> •
+  <a href="#adaptiv">Адаптивность</a> •
 
 </p>
 
