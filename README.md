@@ -13,8 +13,13 @@
 
 </p>
 
+## about
 
+## specifications
+![spec](https://user-images.githubusercontent.com/88460922/165740252-059c7b6d-879e-4d4b-89ce-5396c309a3f9.png)
 
+## adaptiv
+![adaptiv](https://user-images.githubusercontent.com/88460922/165740275-af65da12-4bf2-4915-b7e4-09fd9c42b434.png)
 
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
