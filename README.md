@@ -30,8 +30,7 @@
   * наличие таких дополнительных страничек, как «Контакты», «О нас».
 
 Панель администратора
-![admin](https://user-images.githubusercontent.com/88460922/165747176-03068ff2-0898-474b-a51f-121895c8937d.png)
-
+![admin](https://user-images.githubusercontent.com/88460922/165749088-6d89f337-ce0f-4400-99b9-466dd42e8284.png)
 
 Корзина
 ![card](https://user-images.githubusercontent.com/88460922/165747444-755f839f-dfd5-41ac-8afb-dc52df669f7f.png)
